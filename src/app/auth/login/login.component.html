@@ -1,0 +1,74 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="dark"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-text-center">
+  <ng-container *ngIf="!(user$ | async); else welcome">
+    <mat-card class="login-card">
+    <ion-row>
+      <ion-col size="12" size-md="6" offset-md="3" class="field-col">
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <mat-card-content>
+
+              <mat-form-field class="email-container">
+                <input matInput placeholder="Correo electrónico" formControlName="email">
+                <mat-error *ngIf="(loginForm.controls.email.statusChanges | async)!=='valid'">Correo electrónico no valido.
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput placeholder="Password" [type]="hide ? 'password' : 'text'"
+                  formControlName="password">
+                <mat-icon matSuffix (click)="hide = !hide">{{ hide ? 'visibility' : 'visibility_off'}}</mat-icon>
+                <mat-error *ngIf="true || (loginForm.controls.password.statusChanges | async) !== 'valid'">
+                  Password invalido. Demasiado corto.
+                </mat-error>
+                <mat-hint align="end">
+                  <a routerLink="/auth/reset-password">¿Has olvidado tu password?</a>
+                </mat-hint>
+                
+              </mat-form-field>
+              <div class="password-link">
+                <a routerLink="/auth/reset-password" *ngIf="loginForm.controls.password.touched && loginForm.controls.password.invalid">¿Has olvidado tu password?</a>
+              </div>
+
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-raised-button *ngIf="!isLoading" type="submit" expand="block" color="primary">INICIAR SESION</button>
+              <mat-spinner *ngIf="isLoading"></mat-spinner>
+            </mat-card-actions>
+          </form>
+        </ion-col>
+      </ion-row>
+    </mat-card>
+  </ng-container>
+
+  <ng-template #welcome>
+    <mat-card>
+      <ion-row>
+        <ion-col size="12" size-md="6" offset-md="3">
+          <mat-card-header>
+            <mat-card-title>Hola {{ (user$ | async).displayName ? (user$ | async)?.displayName : (user$ | async).email }}</mat-card-title>
+            <mat-card-subtitle>
+              Escoge una opcion del <a (click)="onMenuClick()">menu</a> o pulsa en <strong>Logout</strong> para
+              cerrar la sesión
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- {{ ( user | async ) | json }} -->
+            <ion-button (click)="onLogout()" expand="block">
+              Logout
+            </ion-button>
+          </mat-card-content>
+        </ion-col>
+      </ion-row>
+    </mat-card>
+
+  </ng-template>
+</ion-content>

@@ -1,0 +1,21 @@
+{
+  "targets": {
+    "fir-course-12b27": {
+      "hosting": {
+        "app": [
+          "fir-course-12b27"
+        ]
+      }
+    },
+    "sowoapp-db": {
+      "hosting": {
+        "app": [
+          "sowoapp-db"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "sowoapp-db"
+  }
+}

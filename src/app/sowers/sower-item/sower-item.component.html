@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/sowers"></ion-back-button>
+    </ion-buttons>
+    <ion-title  *ngIf="sower" class="ion-padding-start">{{ sower.displayName ? sower.displayName : sower.email }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="owner && !editing" (click)="onEdit()">
+        <ion-icon class="create-icon" name="create-outline"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="owner && editing" (click)="onDone()">
+        <ion-icon class="create-icon" name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" *ngIf="sower">
+  <ion-row>
+    <ion-col size="12" size-lg="6" offset-lg="3">
+
+      <ng-container *ngFor="let field of fields; first as isFirst">
+        <div class="edit-banner ion-padding-top ion-text-end" *ngIf="editing">
+          <mat-divider *ngIf="!isFirst"></mat-divider>
+          <button *ngIf="field.canEdit" mat-button color="primary" (click)="onEditField(field)">Edit</button>
+        </div>
+        <div *ngIf="(field.displayLabel && sower[field.property]) || editing" class="ion-text-center">
+          <h3>{{ field.label }}</h3>
+        </div>
+        <div *ngIf="field.type=='text'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + (sower[field.property] ? sower[field.property] : (field.displayLabel ? field.label + '?' : '')) + '</' + field.tag + '>'">
+        <!-- <div *ngIf="field.type=='text'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + (sower[field.property] ? sower[field.property] : field.label + '?') + '</' + field.tag + '>'"> -->
+        </div>
+        <div *ngIf="field.type=='link'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + '<a href=' + http + (sower[field.property] ? sower[field.property] : null) + target + '>' + (sower[field.property] ? sower[field.property] : field.defaultValue) + '</a>' + '</' + field.tag + '>'">
+        </div>
+        <div *ngIf="field.type=='icons'" class="ion-text-center">
+          <a *ngFor="let social of socials"
+            class="social-icon"
+            href="{{ social.url }}" target="_blank">
+            <ion-icon name="{{ social.icon }}"></ion-icon>
+          </a>
+        </div>
+        <div *ngIf="field.type=='img'" class="round-img">
+          <ion-img style="object-fit: cover; display: initial" [src]="sower[field.property] ? sower[field.property] : field.defaultValue "></ion-img>
+        </div>
+        <div *ngIf="field.type=='textarea'" [innerHtml]="sower[field.property] ? makeHtml(sower[field.property]) : field.defaultValue"></div>
+      </ng-container>
+      
+       <!--
+      <div class="ion-text-center">
+        <a href="{{ sower.web }}" target="_blank">{{ sower.web }}</a>
+      </div>
+      <div class="ion-text-center ion-padding">
+        <a *ngFor="let social of socials"
+          class="social-icon"
+          href="{{ social.url }}" target="_blank">
+          <ion-icon name="{{ social.icon }}"></ion-icon>
+        </a>
+      </div>
+
+      <div class="ion-text-center">
+        <h3>¿Que necesito?</h3>
+      </div>
+
+      <div [innerHtml]="sower.needs"></div>
+
+      <div class="ion-text-center">
+        <h3>¿Que ofrezco?</h3>
+      </div>
+
+      <div [innerHtml]="sower.offers"></div> 
+      -->
+
+    </ion-col>
+  </ion-row>
+
+</ion-content>

@@ -1,0 +1,41 @@
+ion-content {
+    --ion-background-color:#f8f8f8;
+}
+
+.round-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+ion-icon {
+    font-size: 48px;
+    padding: 0 8px;
+    // --ionicon-stroke-width: 48px;
+}
+
+.create-icon {
+    font-size: 28px;
+}
+
+.edit-banner {
+    text-align: right;
+}
+
+hr {
+    height: 1px;
+    background-color: black;
+    margin-top: 0;
+} 
+
+// ion-image {
+//     width: 100%;
+//     object-fit: fill;
+//     display: inline;
+// }
+
+.social-icon {
+    color: rgb(0, 128, 255);
+}
