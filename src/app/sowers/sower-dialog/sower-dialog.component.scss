@@ -1,10 +1,19 @@
 .mat-form-field {
     display: block;
+    width: 100%;
 }
 
 
 textarea.mat-input-element {
     resize: none;
+}
+
+// mat-table .mat-column-key {
+//     flex: 0 0 10% !important;
+// }
+
+mat-dialog-content {
+    display: flex;
 }
 
 mat-table {
@@ -41,7 +50,7 @@ mat-progress-bar {
     }
 
     mat-table {
-        width: 60vw;
+        width: 80vw;
     }
 
     mat-row mat-cell {
@@ -53,8 +62,25 @@ mat-progress-bar {
     }
 
     .mat-column-key {
-        flex: 0 0 35% !important;
-        width: 35% !important;
+        // flex: 0 0 35% !important;
+        // width: 35% !important;
+        text-decoration: underline;
+        color: blue;
+        margin-bottom: -24px;
+        margin-top: -8px;
     }
+
+    mat-row {
+        flex-wrap: wrap;
+    }
+
+    mat-cell {
+        flex: 1 1 100%;
+    }
+
+    mat-header-row {
+        display: none;
+    }
+
     
 }

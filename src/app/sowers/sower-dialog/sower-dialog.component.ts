@@ -45,6 +45,7 @@ export class SowerDialogComponent implements OnInit {
       for (const property in data.value as object) {
         this.addSocial(property, data.value[property]);
       }
+
       this.dataSource = new MatTableDataSource((this.dialogForm.get('socials') as FormArray).controls);
       
     } else {
@@ -112,7 +113,7 @@ export class SowerDialogComponent implements OnInit {
       // }
       for (var i = 0; i < socials.length; i++) {
         if (socials[i].link) {
-          result[socials[i].key] = socials[i].link;
+          result[socials[i].key] = socials[i].link.replace(/(^\w+:|^)\/\//, '');
         }
       }
       this.dialogRef.close(result);

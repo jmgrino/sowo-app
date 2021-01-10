@@ -27,18 +27,26 @@
         <div *ngIf="(field.displayLabel && sower[field.property]) || editing" class="ion-text-center">
           <h3>{{ field.label }}</h3>
         </div>
+
+        <!-- Text -->
         <div *ngIf="field.type=='text'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + (sower[field.property] ? sower[field.property] : (field.displayLabel ? field.label + '?' : '')) + '</' + field.tag + '>'">
         <!-- <div *ngIf="field.type=='text'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + (sower[field.property] ? sower[field.property] : field.label + '?') + '</' + field.tag + '>'"> -->
         </div>
+
+        <!-- link -->
         <div *ngIf="field.type=='link'" class="ion-text-center" [innerHTML]="'<' + field.tag + '>' + '<a href=' + http + (sower[field.property] ? sower[field.property] : null) + target + '>' + (sower[field.property] ? sower[field.property] : field.defaultValue) + '</a>' + '</' + field.tag + '>'">
         </div>
+
+        <!-- icons -->
         <div *ngIf="field.type=='icons'" class="ion-text-center">
           <a *ngFor="let social of socials"
             class="social-icon"
-            href="{{ social.url }}" target="_blank">
+            href="{{ http }}{{ social.url }}" target="_blank">
             <ion-icon name="{{ social.icon }}"></ion-icon>
           </a>
         </div>
+
+        <!-- img -->
         <div *ngIf="field.type=='img'" class="round-img">
           <ion-img style="object-fit: cover; display: initial" [src]="sower[field.property] ? sower[field.property] : field.defaultValue "></ion-img>
         </div>

@@ -47,7 +47,7 @@
         <mat-header-cell *matHeaderCellDef> URL </mat-header-cell>
         <mat-cell *matCellDef="let element;" [formGroup]="element">
           <mat-form-field floatLabel="never">
-            <input matInput type="url" placeholder="URL" formControlName="link" required>
+            <input matInput type="url" placeholder="URL" formControlName="link">
           </mat-form-field>
         </mat-cell>
       </ng-container>
@@ -55,32 +55,7 @@
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-
-
-
-
-
-
-
-
-
-      <!-- <ng-container *ngIf="data.type=='icons'">
-      <div formArrayName="socials">
-        <div *ngFor="let social of socials.controls; let i=index;">
-          <div class="FormI" [formGroupName]="i">
-            <mat-label>{{ i }}</mat-label>
-            {{i}}
-            social name:
-            <input matInput type="text" formControlName="key">
-            exp:
-            <input matInput type="text" formControlName="link">
-
-          </div>
-        </div>
-      </div>
-      </ng-container> -->
       
-
     <ion-img *ngIf="data.type=='img'" [src]="imageURL || '//:0'"></ion-img>
 
   </mat-dialog-content>
