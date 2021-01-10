@@ -1,33 +1,12 @@
-import {
-  UIService
-} from 'src/app/shared/ui.service';
-import {
-  AuthService
-} from './../../auth/auth.service';
-import {
-  SowersService
-} from './../sowers.service';
-import {
-  Component,
-  OnInit,
-  ViewEncapsulation
-} from '@angular/core';
-import {
-  ActivatedRoute
-} from '@angular/router';
-import {
-  User
-} from 'src/app/auth/user.model';
-import {
-  MatDialog,
-  MatDialogConfig
-} from '@angular/material/dialog';
-import {
-  SowerDialogComponent
-} from '../sower-dialog/sower-dialog.component';
-import {
-  ShowdownConverter
-} from 'ngx-showdown';
+import { UIService } from 'src/app/shared/ui.service';
+import { AuthService } from './../../auth/auth.service';
+import { SowersService } from './../sowers.service';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { User } from 'src/app/auth/user.model';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SowerDialogComponent } from '../sower-dialog/sower-dialog.component';
+import { ShowdownConverter } from 'ngx-showdown';
 
 export interface DialogData {
   type: string;
@@ -51,6 +30,7 @@ export class SowerItemComponent implements OnInit {
   sower: User;
   user: User;
   owner = false;
+  myself = false;
   editing = false;
   http = 'http://';
   target = ' target="_blank"';
@@ -143,7 +123,8 @@ export class SowerItemComponent implements OnInit {
   ];
 
   constructor(
-    private router: ActivatedRoute,
+    private route: ActivatedRoute,
+    private router: Router,
     private sowerService: SowersService,
     private authService: AuthService,
     private dialog: MatDialog,
@@ -160,15 +141,21 @@ export class SowerItemComponent implements OnInit {
   // }
 
   getSower() {
-    const uid = this.router.snapshot.paramMap.get('id');
+    const uid = this.route.snapshot.paramMap.get('id');
     this.authService.getCurrentUser().subscribe(user => {
       if (user) {
         this.user = user;
         this.sowerService.fetchSower(uid).subscribe(sower => {
           this.sower = sower;
-          if ((this.sower.uid === this.user.uid) || (this.user.isAdmin === true)) {
+          if ((this.sower.uid === this.user.uid)) {
+            this.owner = true;
+            this.myself = true;
+          } else if (this.user.isAdmin === true) {
             this.owner = true;
           }
+          // if ((this.sower.uid === this.user.uid) || (this.user.isAdmin === true)) {
+          //   this.owner = true;
+          // }
 
           this.socials = [];
 
@@ -179,13 +166,11 @@ export class SowerItemComponent implements OnInit {
               url,
               icon,
             });
-
           }
       
         });
       }
     });
-
   }
 
   onEditField(htmlData: DialogData) {
@@ -283,9 +268,14 @@ export class SowerItemComponent implements OnInit {
     this.editing = true;
   }
 
-
   onDone() {
     this.editing = false;
+  }
+
+  onChat() {
+    console.log(this.sower.uid)
+    const uid = this.sower.uid;
+    this.router.navigateByUrl(`/sowers/${uid}/chat`);
   }
 
 }

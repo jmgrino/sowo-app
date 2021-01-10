@@ -10,6 +10,7 @@ import { ShowdownModule } from 'ngx-showdown';
 import { SowersPage } from './sowers.page';
 import { SowerItemComponent } from './sower-item/sower-item.component';
 import { SowerDialogComponent } from './sower-dialog/sower-dialog.component';
+import { SowerChatComponent } from './sower-chat/sower-chat.component';
 
 
 @NgModule({
@@ -21,6 +22,11 @@ import { SowerDialogComponent } from './sower-dialog/sower-dialog.component';
     SowersPageRoutingModule,
     ShowdownModule,
   ],
-  declarations: [SowersPage, SowerItemComponent, SowerDialogComponent]
+  declarations: [
+    SowersPage,
+    SowerItemComponent,
+    SowerDialogComponent,
+    SowerChatComponent
+  ]
 })
 export class SowersPageModule {}

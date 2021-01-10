@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SowersPage } from './sowers.page';
 import { SowerItemComponent } from './sower-item/sower-item.component';
 import { SowerGuard } from './sower.guard';
+import { SowerChatComponent } from './sower-chat/sower-chat.component';
 
 const routes: Routes = [
   {
@@ -14,6 +15,11 @@ const routes: Routes = [
   {
     path: ':id',
     component: SowerItemComponent,
+    canActivate: [SowerGuard]
+  },
+  {
+    path: ':id/chat',
+    component: SowerChatComponent,
     canActivate: [SowerGuard]
   },
 
