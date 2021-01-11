@@ -17,18 +17,6 @@ export class SowersService {
     private authService: AuthService,
   ) { }
 
-  fetchSowers() {
-    this.sowerCollection = this.afs.collection('users');
-    return this.sowerCollection.valueChanges().pipe(
-      map(  users => {
-        users.map( user => {
-          user.photoUrl = 'https://i.picsum.photos/id/1027/2848/4272.jpg?hmac=EAR-f6uEqI1iZJjB6-NzoZTnmaX0oI0th3z8Y78UpKM';
-          return user;
-        });
-        return users;
-      })
-    );
-  }
 
   fetchOtherSowers(uid) {
     this.sowerCollection = this.afs.collection('users', ref => ref.where('uid', '!=', uid));

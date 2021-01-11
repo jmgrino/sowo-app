@@ -6,6 +6,9 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/auth/user.model';
 import { UIService } from 'src/app/shared/ui.service';
 import { SowersService } from '../sowers.service';
+// import * as firebase from 'firebase/app';
+import { firestore } from 'firebase/firebase';
+
 
 export interface Message {
   // createdAt: firebase.firestore.FieldValue;
@@ -44,7 +47,7 @@ export class SowerChatComponent implements OnInit {
     this.messages = of([
       {
         // createdAt: firebase.firestore.FieldValue;
-        createdAt: new Date(),
+        createdAt: this.timestamp,
         id: '123456',
         from: "user1111",
         msg: 'Bon dia!',
@@ -53,7 +56,7 @@ export class SowerChatComponent implements OnInit {
       },
       {
         // createdAt: firebase.firestore.FieldValue;
-        createdAt: new Date(),
+        createdAt: this.timestamp,
         id: '123456',
         from: "user1111",
         msg: 'Bon dia! Com va tot!',
@@ -62,7 +65,7 @@ export class SowerChatComponent implements OnInit {
       },
       {
         // createdAt: firebase.firestore.FieldValue;
-        createdAt: new Date(),
+        createdAt: this.timestamp,
         id: '123456',
         from: "user1111",
         msg: 'Molt bé!',
@@ -90,6 +93,23 @@ export class SowerChatComponent implements OnInit {
   }
 
   sendMessage() {
+    
+    if ( this.newMsg.trim() ) {
+      const message = {
+        createdAt: this.timestamp,
+        // id: '123456',
+        from: this.user.uid,
+        msg: this.newMsg.trim(),
+        fromName: this.user.displayName,
+        myMsg: true
+      }
+      console.log(message);
+      this.newMsg = '';
+      
+
+    }
+    
+    
     // this.chatService.addChatMessage(this.newMsg).then(() => {
     //   this.newMsg = '';
     //   this.content.scrollToBottom();
@@ -102,6 +122,17 @@ export class SowerChatComponent implements OnInit {
     // });
   }
  
-
+  get timestamp() {
+    const timestampOptions = {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }
+    return new Date(firestore.Timestamp.now().seconds*1000).toLocaleString('default', timestampOptions);
+ 
+  }
 
 }

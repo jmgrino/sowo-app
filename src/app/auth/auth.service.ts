@@ -134,20 +134,6 @@ export class AuthService {
     return this.user$.asObservable();
   }
 
-  // private updateUserData(user: User) {
-  //   const userRef: AngularFirestoreDocument<User> = this.afs.doc(
-  //     `users/${user.uid}`
-  //   );
-  //   const data: User = {
-  //     uid: user.uid,
-  //     email: user.email,
-  //     displayName: user.displayName,
-  //     photoUrl: user.photoUrl
-  //   };
-
-  //   return userRef.set(data, { merge: true });
-  // }
-
   setPrintName(name: string) {
     var newName = '';
     for (var i = 0; i < name.length; i ++) {

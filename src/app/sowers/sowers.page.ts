@@ -25,29 +25,17 @@ export class SowersPage implements OnInit {
   ngOnInit() {
     this.authService.getCurrentUser().subscribe( user => {
       this.user = user;
-      this.getSowers();
+      this.sowers$ = this.getOtherSowers();
     });
   }
 
-  getSowers() {
+  getOtherSowers() {
       if (this.user) {
-        this.sowers$ = this.sowersService.fetchOtherSowers(this.user.uid).pipe(
+        return this.sowers$ = this.sowersService.fetchOtherSowers(this.user.uid).pipe(
           tap(  results => results.sort())
         );
       }
   }
-
-  // getSowers() {
-  //   this.authService.getCurrentUser().subscribe( user => {
-  //     if (user) {
-  //       this.user = user;
-  //       this.sowers$ = this.sowersService.fetchOtherSowers(user.uid).pipe(
-  //         tap(  results => results.sort())
-  //       );
-  //     }
-  //   });
-  //   // this.sowers$ = this.sowersService.fetchSowers();
-  // }
 
   onUserProfile() {
     this.router.navigate(['/sowers', this.user.uid]);
