@@ -4,6 +4,12 @@
       <ion-back-button text="" defaultHref="/sowers"></ion-back-button>
     </ion-buttons>
     <ion-title *ngIf="sower" class="ion-padding-start">{{ sower.displayName ? sower.displayName : sower.email }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button  (click)="onClear()">
+        <ion-icon class="toolbar-icon" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -13,12 +19,13 @@
       <ion-grid>
         <ion-row *ngFor="let message of messages | async">
           <ion-col size="9" class="message"
-            [offset]="message.myMsg ? 3 : 0"
-            [ngClass]="{ 'my-message': message.myMsg, 'other-message': !message.myMsg }">
-            <b>{{ message.fromName }}</b><br>
+            [offset]="message.send ? 3 : 0"
+            [ngClass]="{ 'my-message': message.send, 'other-message': !message.send }">
+            <b>{{ message.send ? user?.displayName : sower?.displayName }}</b><br>
             <span>{{ message.msg }}
             </span>
-            <div class="time ion-text-right"><br>{{ message.createdAt | date:'short' }}</div>
+            <div class="time ion-text-right"><br>{{ displayTimestamp(message.createdAt) }}</div>
+            <!-- <div class="time ion-text-right"><br>{{ message.createdAt | date:'short' }}</div> -->
             <!-- <div class="time ion-text-right"><br>{{ message.createdAt?.toMillis() | date:'short' }}</div> -->
           </ion-col>
         </ion-row>

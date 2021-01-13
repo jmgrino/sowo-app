@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+  	function isAuthenticated() {
+    	return request.auth != null;
+    } 
+	function notUpdated(key) {
+  	return !(key in request.resource.data)
+         || (
+           	(key in resource.data)
+        		&& request.resource.data[key] == resource.data[key]
+         ) || (
+         		resource == null && request.resource.data[key] == false
+         );
+	}
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true
+      	&& notUpdated('isAdmin');
+      allow write: if /databases/$(database)/documents/users/$(request.auth.uid) == /databases/$(database)/documents/users/$(userId)
+        && notUpdated('isAdmin');
+    }
+
+	match /chats/{chatId} {
+		allow read: if isAuthenticated();
+		allow write: if isAuthenticated();
+	}
+  }
+}

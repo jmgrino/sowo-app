@@ -273,7 +273,6 @@ export class SowerItemComponent implements OnInit {
   }
 
   onChat() {
-    console.log(this.sower.uid)
     const uid = this.sower.uid;
     this.router.navigateByUrl(`/sowers/${uid}/chat`);
   }

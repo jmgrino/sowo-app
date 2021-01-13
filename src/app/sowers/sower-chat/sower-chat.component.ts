@@ -1,23 +1,24 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+// import { Timestamp } from '@google-cloud/firestore';
 import { IonContent } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/auth/user.model';
 import { UIService } from 'src/app/shared/ui.service';
 import { SowersService } from '../sowers.service';
-// import * as firebase from 'firebase/app';
-import { firestore } from 'firebase/firebase';
 
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
 export interface Message {
-  // createdAt: firebase.firestore.FieldValue;
-  createdAt: Date;
-  id: string;
-  from: string;
+  id?: string;
+  uid: string;
+  createdAt?: Date;
+  send: boolean;
+  partnerId: string;
   msg: string;
-  fromName: string;
-  myMsg: boolean;
+  read: boolean;
 }
 
 @Component({
@@ -28,7 +29,7 @@ export interface Message {
 export class SowerChatComponent implements OnInit {
   @ViewChild(IonContent) content: IonContent;
  
-  messages: Observable<any[]>;
+  messages: Observable<Message[]>;
   newMsg = '';
   sower: User;
   user: User;
@@ -42,40 +43,40 @@ export class SowerChatComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getSower();
-    // this.messages = this.chatService.getChatMessages();
-    this.messages = of([
-      {
-        // createdAt: firebase.firestore.FieldValue;
-        createdAt: this.timestamp,
-        id: '123456',
-        from: "user1111",
-        msg: 'Bon dia!',
-        fromName: 'Josep Maria',
-        myMsg: true
-      },
-      {
-        // createdAt: firebase.firestore.FieldValue;
-        createdAt: this.timestamp,
-        id: '123456',
-        from: "user1111",
-        msg: 'Bon dia! Com va tot!',
-        fromName: 'Laura',
-        myMsg: false
-      },
-      {
-        // createdAt: firebase.firestore.FieldValue;
-        createdAt: this.timestamp,
-        id: '123456',
-        from: "user1111",
-        msg: 'Molt bé!',
-        fromName: 'Josep Maria',
-        myMsg: true
-      },
-    ])
+    this.getData();
+    
+    // this.messages = of([
+    //   {
+    //     id: null,
+    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
+    //     createdAt: this.timestamp,
+    //     send: true,
+    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
+    //     msg: 'Bon dia!',
+    //     read: true,
+    //   },
+    //   {
+    //     id: null,
+    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
+    //     createdAt: this.timestamp,
+    //     send: false,
+    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
+    //     msg: 'Bon dia! Com va tot!',
+    //     read: true,
+    //   },
+    //   {
+    //     id: null,
+    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
+    //     createdAt: this.timestamp,
+    //     send: true,
+    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
+    //     msg: 'Molt bé!',
+    //     read: true,
+    //   },
+    // ])
   }
 
-  getSower() {
+  getData() {
     const uid = this.router.snapshot.paramMap.get('id');
     this.authService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -85,6 +86,14 @@ export class SowerChatComponent implements OnInit {
           if ( this.sower.uid === this.user.uid ) {
             this.owner = true;
           }
+          this.messages = this.sowerService.getMessages(this.user.uid, this.sower.uid);
+          
+          // this.messages.subscribe( msgs => {
+          //   console.log('Msgs', msgs);
+            
+          // });
+      
+ 
      
         });
       }
@@ -95,25 +104,27 @@ export class SowerChatComponent implements OnInit {
   sendMessage() {
     
     if ( this.newMsg.trim() ) {
-      const message = {
-        createdAt: this.timestamp,
-        // id: '123456',
-        from: this.user.uid,
+      const message: Message = {
+        uid: this.user.uid,
+        send: true,
+        partnerId: this.sower.uid,
         msg: this.newMsg.trim(),
-        fromName: this.user.displayName,
-        myMsg: true
+        read: true,
       }
-      console.log(message);
-      this.newMsg = '';
-      
+      // console.log(message);
+
+      this.sowerService.addMessage(message).subscribe( 
+      () => {
+        this.newMsg = '';
+      },
+      error => {
+        const message = this.uiService.translateFirestoreError(error);
+        this.uiService.showStdSnackbar(message);
+      });
 
     }
     
-    
-    // this.chatService.addChatMessage(this.newMsg).then(() => {
-    //   this.newMsg = '';
-    //   this.content.scrollToBottom();
-    // });
+ 
   }
  
   signOut() {
@@ -122,7 +133,8 @@ export class SowerChatComponent implements OnInit {
     // });
   }
  
-  get timestamp() {
+  
+  displayTimestamp(timestamp: firebase.firestore.Timestamp) {
     const timestampOptions = {
       day: '2-digit',
       month: '2-digit',
@@ -131,8 +143,25 @@ export class SowerChatComponent implements OnInit {
       minute: '2-digit',
       second: '2-digit',
     }
-    return new Date(firestore.Timestamp.now().seconds*1000).toLocaleString('default', timestampOptions);
- 
+
+    if (timestamp) {
+      return timestamp.toDate().toLocaleString('default', timestampOptions);
+    } else {
+      return '';
+    } 
+  }
+
+  onClear() {
+    this.sowerService.deleteChats(this.user.uid, this.sower.uid);
+    
+    // .subscribe( 
+    //   () => {
+    //     // Do nothing
+    //   },
+    //   error => {
+    //     const message = this.uiService.translateFirestoreError(error);
+    //     this.uiService.showStdSnackbar(message);
+    //   });
   }
 
 }

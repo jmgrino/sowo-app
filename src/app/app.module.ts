@@ -16,7 +16,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
-
 import { MaterialModule } from './material.module';
 import { AuthService } from './auth/auth.service';
 import { UIService } from './shared/ui.service';
