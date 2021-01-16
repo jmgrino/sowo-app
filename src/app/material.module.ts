@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 
+import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatDialogModule} from '@angular/material/dialog';
@@ -15,6 +16,7 @@ import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
   imports: [
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,
@@ -28,6 +30,7 @@ import {MatTableModule} from '@angular/material/table';
     MatTableModule,
   ],
   exports: [
+    MatBadgeModule,
     MatButtonModule,
     MatCardModule,
     MatDialogModule,

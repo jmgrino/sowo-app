@@ -10,6 +10,7 @@ import { SowersService } from '../sowers.service';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { tap } from 'rxjs/operators';
 
 export interface Message {
   id?: string;
@@ -27,9 +28,12 @@ export interface Message {
   styleUrls: ['./sower-chat.component.scss'],
 })
 export class SowerChatComponent implements OnInit {
-  @ViewChild(IonContent) content: IonContent;
+  @ViewChild('content') content: IonContent;
+  @ViewChild('autofocus', { static: false }) msgInput;
+  // @ViewChild('autofocus') msgInput;
+
  
-  messages: Observable<Message[]>;
+  messages$: Observable<Message[]>;
   newMsg = '';
   sower: User;
   user: User;
@@ -45,7 +49,7 @@ export class SowerChatComponent implements OnInit {
   ngOnInit() {
     this.getData();
     
-    // this.messages = of([
+    // this.messages$ = of([
     //   {
     //     id: null,
     //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
@@ -74,7 +78,13 @@ export class SowerChatComponent implements OnInit {
     //     read: true,
     //   },
     // ])
+
   }
+
+  ionViewWillLeave() {
+    this.sowerService.markReadMessages(this.user.uid, this.sower.uid);
+  }
+
 
   getData() {
     const uid = this.router.snapshot.paramMap.get('id');
@@ -86,14 +96,16 @@ export class SowerChatComponent implements OnInit {
           if ( this.sower.uid === this.user.uid ) {
             this.owner = true;
           }
-          this.messages = this.sowerService.getMessages(this.user.uid, this.sower.uid);
+          this.messages$ = this.sowerService.getMessages(this.user.uid, this.sower.uid);
+          this.msgInput.setFocus();
           
-          // this.messages.subscribe( msgs => {
-          //   console.log('Msgs', msgs);
-            
-          // });
-      
- 
+          this.messages$.subscribe( msgs => {
+            this.msgInput.setFocus();
+          },
+          error => {
+            const message = this.uiService.translateFirestoreError(error);
+            this.uiService.showStdSnackbar(message);
+          });
      
         });
       }
@@ -109,13 +121,13 @@ export class SowerChatComponent implements OnInit {
         send: true,
         partnerId: this.sower.uid,
         msg: this.newMsg.trim(),
-        read: true,
+        read: false,
       }
-      // console.log(message);
 
       this.sowerService.addMessage(message).subscribe( 
-      () => {
+      (ref) => {
         this.newMsg = '';
+        
       },
       error => {
         const message = this.uiService.translateFirestoreError(error);
@@ -123,17 +135,8 @@ export class SowerChatComponent implements OnInit {
       });
 
     }
-    
- 
   }
  
-  signOut() {
-    // this.chatService.signOut().then(() => {
-    //   this.router.navigateByUrl('/', { replaceUrl: true });
-    // });
-  }
- 
-  
   displayTimestamp(timestamp: firebase.firestore.Timestamp) {
     const timestampOptions = {
       day: '2-digit',
@@ -153,7 +156,8 @@ export class SowerChatComponent implements OnInit {
 
   onClear() {
     this.sowerService.deleteChats(this.user.uid, this.sower.uid);
-    
+
+   
     // .subscribe( 
     //   () => {
     //     // Do nothing
@@ -162,6 +166,10 @@ export class SowerChatComponent implements OnInit {
     //     const message = this.uiService.translateFirestoreError(error);
     //     this.uiService.showStdSnackbar(message);
     //   });
+  }
+
+  scrollToBottton() {
+    this.content.scrollToBottom();
   }
 
 }

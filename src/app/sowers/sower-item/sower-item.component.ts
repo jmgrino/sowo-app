@@ -153,9 +153,6 @@ export class SowerItemComponent implements OnInit {
           } else if (this.user.isAdmin === true) {
             this.owner = true;
           }
-          // if ((this.sower.uid === this.user.uid) || (this.user.isAdmin === true)) {
-          //   this.owner = true;
-          // }
 
           this.socials = [];
 

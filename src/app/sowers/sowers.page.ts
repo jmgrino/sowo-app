@@ -30,8 +30,9 @@ export class SowersPage implements OnInit {
   }
 
   getOtherSowers() {
+
       if (this.user) {
-        return this.sowers$ = this.sowersService.fetchOtherSowers(this.user.uid).pipe(
+        return this.sowersService.fetchOtherSowers(this.user.uid).pipe(
           tap(  results => results.sort())
         );
       }

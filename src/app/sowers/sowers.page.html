@@ -20,7 +20,8 @@
           <ion-avatar slot="start">
             <img [src]="sower.photoUrl ? sower.photoUrl : defaultValue">
           </ion-avatar>
-          <ion-label> {{ sower.displayName ? sower.displayName : sower.email }}</ion-label>
+          <ion-label > {{ sower.displayName ? sower.displayName : sower.email }}</ion-label>
+          <ion-badge *ngIf="sower.unreadMsgs > 0" slot="end" color="success">{{ sower.unreadMsgs }}</ion-badge>
         </ion-item>
         
       </ion-list>

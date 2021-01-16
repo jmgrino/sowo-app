@@ -11,6 +11,7 @@ export interface User {
   socialLinks?: SocialLink;
   queNecesito?: string;
   queOfrezco?: string;
+  unreadMsgs?: number;
 }
 
 export interface SocialLink {
