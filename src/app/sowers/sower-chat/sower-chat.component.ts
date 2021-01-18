@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-// import { Timestamp } from '@google-cloud/firestore';
+
 import { IonContent } from '@ionic/angular';
 import { Observable, of } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { User } from 'src/app/auth/user.model';
 import { UIService } from 'src/app/shared/ui.service';
 import { SowersService } from '../sowers.service';
+import { AlertController } from '@ionic/angular';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { tap } from 'rxjs/operators';
 
 export interface Message {
   id?: string;
@@ -44,40 +44,11 @@ export class SowerChatComponent implements OnInit {
     private sowerService: SowersService,
     private authService: AuthService,
     private uiService: UIService,
+    public alertController: AlertController,
   ) {}
 
   ngOnInit() {
     this.getData();
-    
-    // this.messages$ = of([
-    //   {
-    //     id: null,
-    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
-    //     createdAt: this.timestamp,
-    //     send: true,
-    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
-    //     msg: 'Bon dia!',
-    //     read: true,
-    //   },
-    //   {
-    //     id: null,
-    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
-    //     createdAt: this.timestamp,
-    //     send: false,
-    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
-    //     msg: 'Bon dia! Com va tot!',
-    //     read: true,
-    //   },
-    //   {
-    //     id: null,
-    //     uid: '2mYFCZb0eUbhfyAK1ugFlvj4xdY2',
-    //     createdAt: this.timestamp,
-    //     send: true,
-    //     partnerId: 'U9S0Itn5GVbxejlD1k6AHlZ4v1J2',
-    //     msg: 'Molt bé!',
-    //     read: true,
-    //   },
-    // ])
 
   }
 
@@ -144,28 +115,39 @@ export class SowerChatComponent implements OnInit {
       year: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit',
+      // second: '2-digit',
     }
 
     if (timestamp) {
-      return timestamp.toDate().toLocaleString('default', timestampOptions);
+      return timestamp.toDate().toLocaleString('es-ES', timestampOptions);
     } else {
       return '';
     } 
   }
 
-  onClear() {
-    this.sowerService.deleteChats(this.user.uid, this.sower.uid);
+  async onClear() {
 
-   
-    // .subscribe( 
-    //   () => {
-    //     // Do nothing
-    //   },
-    //   error => {
-    //     const message = this.uiService.translateFirestoreError(error);
-    //     this.uiService.showStdSnackbar(message);
-    //   });
+    const alert = await this.alertController.create({
+      cssClass: 'alert-class',
+      header: 'Confirmar',
+      message: 'Borrar todos los mensajes de este chat?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'buttonsAlertLeft',
+        }, {
+          text: 'Si',
+          cssClass: 'buttonsAlertRight',
+          handler: () => {
+            this.sowerService.deleteChats(this.user.uid, this.sower.uid);
+          }
+        }
+      ]
+    });
+
+    await alert.present();    
+
   }
 
   scrollToBottton() {

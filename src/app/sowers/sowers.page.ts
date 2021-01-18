@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from '../auth/user.model';
 import { SowersService } from './sowers.service';
-import { tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -33,7 +33,29 @@ export class SowersPage implements OnInit {
 
       if (this.user) {
         return this.sowersService.fetchOtherSowers(this.user.uid).pipe(
-          tap(  results => results.sort())
+          map(  results => {
+            results.sort(( a, b ) => {
+
+              const x = a.displayName ? a.displayName : a.email
+              const y = b.displayName ? b.displayName : b.email
+
+              if (a.unreadMsgs > 0) {
+                if (b.unreadMsgs > 0) {
+                  return x.localeCompare(y);
+                } else {
+                  return -1;
+                }
+              } else {
+                if (b.unreadMsgs > 0) {
+                  return 1;
+                } else {
+                  return x.localeCompare(y);;
+                }                
+              }
+            })
+
+            return results;
+          })
         );
       }
   }

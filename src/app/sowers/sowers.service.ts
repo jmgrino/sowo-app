@@ -2,8 +2,8 @@ import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { User } from '../auth/user.model';
-import { filter, first, map, switchMap, take, tap } from 'rxjs/operators';
-import { combineLatest, from, of } from 'rxjs';
+import { filter, map, take } from 'rxjs/operators';
+import { combineLatest, from } from 'rxjs';
 import { Message } from './sower-chat/sower-chat.component';
 
 import firebase from 'firebase/app';
