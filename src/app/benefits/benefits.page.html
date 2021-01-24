@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button color="dark"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Beneficios</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="user.isAdmin && !editing" (click)="onEdit()">
+        <ion-icon class="toolbar-icon" name="create-outline" size="large"></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="user.isAdmin && editing" (click)="onDone()">
+        <ion-icon class="toolbar-icon" name="checkmark-outline" size="large" ></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="user.isAdmin" (click)="onAdd()">
+        <ion-icon slot="end" name="add-circle-outline" size="large" color="dark"></ion-icon>
+      </ion-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-list>
+      <ng-container *ngFor="let benefit of (benefits$ | async); first as isFirst"  >
+      <ion-item-divider *ngIf="editing">
+        <div class="edit-banner ion-padding-top ion-text-end">
+          <mat-divider *ngIf="!isFirst"></mat-divider>
+          <div class="left-banner">
+            <button mat-button class="upload-button" color="primary" (click)="fileInput.click()">Upload Foto</button>
+            <input hidden (change)="onUploadPhoto($event, benefit)" #fileInput type="file" id="file" accept="image/png, image/jpeg">
+            <div class="upload-progress" *ngIf="(uploadPercent$ | async) as percentage">
+              <mat-progress-bar class="progress-bar" mode="determinate" [value]="percentage"></mat-progress-bar>
+            </div>
+          </div>
+          <div class="right-banner">
+            <button mat-button color="warn" (click)="onRemoveItem(benefit)">Remove</button>
+            <button mat-button color="primary" (click)="onEditItem(benefit)">Edit</button>
+          </div>
+        </div>
+      </ion-item-divider>
+      <ion-item lines="none">
+
+        <div class="item-container">
+          <div class="img-container">
+            <img width="110" height="110" class="brand-img" [src]=benefit.photoUrl>
+          </div>
+          <div class="text-container">
+            <ion-label class="company-label">{{ benefit.company }}</ion-label>
+            <ion-label class="companyType-label">{{ benefit.companyType }}</ion-label>
+            <ion-label class="address-label">{{ benefit.address }}</ion-label>
+            <ion-label class="offer-label">{{ benefit.offer }}</ion-label>
+            <ion-note class="note-label">{{ benefit.note }}</ion-note>
+          </div>
+        </div>
+
+      </ion-item>
+    </ng-container>
+    </ion-list>
+</ion-content>

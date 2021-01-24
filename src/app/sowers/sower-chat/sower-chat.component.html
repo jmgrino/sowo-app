@@ -14,8 +14,6 @@
 </ion-header>
 
 <ion-content class="ion-padding" #content>
-  <!-- <ion-row>
-    <ion-col size="12" size-lg="6" offset-lg="3"> -->
       <ion-grid>
         <ion-row *ngFor="let message of messages$ | async;  let last = last">
           <ion-col class="message"
@@ -27,8 +25,6 @@
             <span>{{ message.msg }}
             </span>
             <div class="time ion-text-right"><br>{{ displayTimestamp(message.createdAt) }}</div>
-            <!-- <div class="time ion-text-right"><br>{{ message.createdAt | date:'short' }}</div> -->
-            <!-- <div class="time ion-text-right"><br>{{ message.createdAt?.toMillis() | date:'short' }}</div> -->
           </ion-col>
           {{last ? scrollToBottton() : ''}}
         </ion-row>

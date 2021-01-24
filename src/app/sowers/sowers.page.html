@@ -16,6 +16,7 @@
   <ion-row>
     <ion-col class="mycol" size="12" size-sm="8" offset-sm="2">
       <ion-list>
+
         <ion-item [routerLink]="[sower.uid]" button detail=(true) *ngFor="let sower of (sowers$ | async)">
           <ion-avatar slot="start">
             <img [src]="sower.photoUrl ? sower.photoUrl : defaultValue">
@@ -25,8 +26,6 @@
         </ion-item>
         
       </ion-list>
-    
     </ion-col>
   </ion-row>
-
 </ion-content>

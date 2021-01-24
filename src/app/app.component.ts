@@ -22,6 +22,14 @@ export class AppComponent implements OnInit {
       hideOnAuth: false
     },
     {
+      title: 'Beneficios',
+      url: '/benefits',
+      icon: 'ribbon-outline',
+      onlyAuth: true,
+      onlyAdmin: false,
+      hideOnAuth: false
+    },
+    {
       title: 'Login',
       url: '/auth/login',
       icon: 'enter-outline',

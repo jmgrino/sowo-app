@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" defaultHref="/benefits"></ion-back-button>
+    </ion-buttons>
+    <ion-title  class="ion-padding-start">{{ isAddMode ? 'Nuevo beneficio' : 'Edit' }}</ion-title>
+ 
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <form [formGroup]="benefitsForm" (submit)="onSubmit()">
+
+      <div class="field-container">
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="company" required>
+          <mat-error *ngIf="benefitsForm.controls.company.invalid">
+            <span *ngIf="benefitsForm.controls.company.errors.required">Este campo es obligatorio.</span>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="field-container">
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Tipo de negocio</mat-label>
+          <input matInput formControlName="companyType">
+        </mat-form-field>
+      </div>
+
+      <div class="field-container">
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Dirección</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+      </div>
+
+      <div class="field-container">
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Oferta</mat-label>
+          <input matInput formControlName="offer">
+        </mat-form-field>
+      </div>
+
+      <div class="field-container">
+        <mat-form-field class="form-field" appearance="fill">
+          <mat-label>Nota</mat-label>
+          <input matInput formControlName="note">
+        </mat-form-field>
+      </div>
+
+      <div class="button-container">
+        <button mat-stroked-button color="primary" type="button" (click)="onCancel()">Cancelar<ion-icon class="icon-cancel" name="close-outline"></ion-icon></button>
+        <button mat-stroked-button color="primary" type="submit">{{ isAddMode ? 'Añadir' : 'Guardar' }}<ion-icon class="icon-ok" name="checkmark-outline"></ion-icon></button>
+      </div>
+
+    </form>
+  </div>
+  
+</ion-content>
