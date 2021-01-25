@@ -1,11 +1,12 @@
+import { StorageService } from './../../shared/storage.service';
 import { UIService } from 'src/app/shared/ui.service';
 import { DialogData } from './../sower-item/sower-item.component';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+// import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AngularFireStorage } from '@angular/fire/storage';
 import { concatMap, last } from 'rxjs/operators';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -29,7 +30,7 @@ export class SowerDialogComponent implements OnInit {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<SowerDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: DialogData,
-    private storage: AngularFireStorage,
+    private storageService: StorageService,
     private uiService: UIService
   ) {
     this.data = data;
@@ -84,12 +85,12 @@ export class SowerDialogComponent implements OnInit {
     } else if (file.size >= (2 * 1024 * 1024) ) {
       this.uiService.showStdSnackbar('Imagen demasiado grande. Debe ser menor de 2 MBytes');
     } else {
-      const task = this.storage.upload(filePath, file);
+      const task = this.storageService.uploadFile(filePath, file);
       this.uploadPercent$ = task.percentageChanges();
 
       task.snapshotChanges().pipe(
         last(),
-        concatMap( () => this.storage.ref(filePath).getDownloadURL() )
+        concatMap( () => this.storageService.getDownloadURL(filePath) )
       ).subscribe(  url => {
         this.imageURL = url;
       }, error => {

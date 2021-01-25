@@ -1,3 +1,4 @@
+import { StorageService } from './../shared/storage.service';
 import { UIService } from './../shared/ui.service';
 import { BenefitsService } from './benefits.service';
 import { Router } from '@angular/router';
@@ -8,7 +9,6 @@ import { Benefit } from './benefit.model';
 import { AuthService } from '../auth/auth.service';
 import { AlertController } from '@ionic/angular';
 import { concatMap, last } from 'rxjs/operators';
-import { AngularFireStorage } from '@angular/fire/storage';
 
 const IMAGENAME = 'brand-image';
 
@@ -26,9 +26,9 @@ export class BenefitsPage implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private storage: AngularFireStorage,
     private benefitsService: BenefitsService,
     private uiService: UIService,
+    private storageService: StorageService,
     public alertController: AlertController,
   ) { }
 
@@ -73,7 +73,7 @@ export class BenefitsPage implements OnInit {
           handler: () => {
             this.benefitsService.deleteBenefit(benefit.id).subscribe( 
               () => {
-                this.deleteFolderContents(`benefits/${benefit.id}`);
+                this.storageService.deleteFolderContents(`benefits/${benefit.id}`);
               },  error => {
                 const message = this.uiService.translateFirestoreError(error);
                 this.uiService.showStdSnackbar(message);
@@ -87,8 +87,6 @@ export class BenefitsPage implements OnInit {
     });
 
     await alert.present();   
-
-
     
   }
 
@@ -103,12 +101,12 @@ export class BenefitsPage implements OnInit {
     } else if (file.size >= (2 * 1024 * 1024) ) {
       this.uiService.showStdSnackbar('Imagen demasiado grande. Debe ser menor de 2 MBytes');
     } else {
-      const task = this.storage.upload(filePath, file);
+      const task = this.storageService.uploadFile(filePath, file);
       this.uploadPercent$ = task.percentageChanges();
 
       task.snapshotChanges().pipe(
         last(),
-        concatMap( () => this.storage.ref(filePath).getDownloadURL() )
+        concatMap( () => this.storageService.getDownloadURL(filePath) )
       ).subscribe(  url => {
          this.benefitsService.saveBenefit(benefit.id, {photoUrl: url}).subscribe( () => {},
          error => {
@@ -122,35 +120,6 @@ export class BenefitsPage implements OnInit {
 
     }
     
-  }
-
-  private deleteFolderContents(path) {
-    const ref = this.storage.ref(path);
-  
-    ref.listAll()
-      .subscribe(
-        dir => {
-          console.log('Dir', dir.items);
-          
-          dir.items.forEach(fileRef => {
-            console.log(fileRef);
-            
-            this.deleteFile(path, fileRef.name);
-          });
-          // dir.prefixes.forEach(folderRef => {
-          //   this.deleteFolderContents(folderRef.fullPath);
-          // })
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
-
-  private deleteFile(pathToFile, fileName) {
-    const ref = this.storage.ref(pathToFile);
-    const childRef = ref.child(fileName);
-    childRef.delete();
   }
 
 }
