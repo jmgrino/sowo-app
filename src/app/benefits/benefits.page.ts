@@ -22,6 +22,7 @@ export class BenefitsPage implements OnInit {
   benefits$: Observable<Benefit[]>;
   editing = false;
   uploadPercent$: Observable<number>;
+  defaultValue = '../../../assets/img/unknown_shop.png';
 
   constructor(
     private authService: AuthService,
@@ -117,9 +118,7 @@ export class BenefitsPage implements OnInit {
         const message = this.uiService.translateStorageError(error);
         this.uiService.showStdSnackbar(message);
       });
-
     }
-    
   }
 
 }

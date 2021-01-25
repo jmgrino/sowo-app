@@ -42,7 +42,7 @@
 
         <div class="item-container">
           <div class="img-container">
-            <img width="110" height="110" class="brand-img" [src]=benefit.photoUrl>
+            <img width="110" height="110" class="brand-img" [src]="benefit.photoUrl ? benefit.photoUrl : defaultValue">
           </div>
           <div class="text-container">
             <ion-label class="company-label">{{ benefit.company }}</ion-label>

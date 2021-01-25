@@ -18,7 +18,7 @@ export class StorageService {
     return this.storage.ref(filePath).getDownloadURL();
   }
 
-  deleteFolderContents(path) {
+  deleteFolderContents(path, recursive=false) {
     const ref = this.storage.ref(path);
   
     ref.listAll()
@@ -27,9 +27,11 @@ export class StorageService {
           dir.items.forEach(fileRef => {
             this.deleteFile(path, fileRef.name);
           });
-          // dir.prefixes.forEach(folderRef => {
-          //   this.deleteFolderContents(folderRef.fullPath);
-          // })
+          if (recursive) {
+            dir.prefixes.forEach( folderRef => {
+              this.deleteFolderContents(folderRef.fullPath);
+            })
+          }
         },
         (error) => {
           console.log(error);
