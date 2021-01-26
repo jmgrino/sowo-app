@@ -1,25 +1,24 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { BenefitEditComponent } from './benefit-edit/benefit-edit.component';
-import { BenefitGuard } from './benefit.guard';
-
+import { SharedGuard } from '../shared/shared.guard';
 import { BenefitsPage } from './benefits.page';
+import { BenefitEditComponent } from './benefit-edit/benefit-edit.component';
 
 const routes: Routes = [
   {
     path: '',
     component: BenefitsPage,
-    canActivate: [BenefitGuard]
+    canActivate: [SharedGuard]
   },
   {
     path: 'add',
     component: BenefitEditComponent,
-    canActivate: [BenefitGuard]
+    canActivate: [SharedGuard]
   },
   {
     path: 'edit/:id',
     component: BenefitEditComponent,
-    canActivate: [BenefitGuard]
+    canActivate: [SharedGuard]
   },
 ];
 

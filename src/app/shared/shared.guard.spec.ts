@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SowerGuard } from './sower.guard';
+import { SharedGuard } from './shared.guard';
 
-describe('SowerGuard', () => {
-  let guard: SowerGuard;
+describe('SharedGuard', () => {
+  let guard: SharedGuard;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    guard = TestBed.inject(SowerGuard);
+    guard = TestBed.inject(SharedGuard);
   });
 
   it('should be created', () => {

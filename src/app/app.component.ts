@@ -30,6 +30,14 @@ export class AppComponent implements OnInit {
       hideOnAuth: false
     },
     {
+      title: 'Eventos',
+      url: '/events',
+      icon: 'calendar-outline',
+      onlyAuth: true,
+      onlyAdmin: false,
+      hideOnAuth: false
+    },
+    {
       title: 'Login',
       url: '/auth/login',
       icon: 'enter-outline',
