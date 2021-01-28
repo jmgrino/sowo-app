@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { EventEditComponent } from './event-edit.component';
@@ -7,7 +7,7 @@ describe('EventEditComponent', () => {
   let component: EventEditComponent;
   let fixture: ComponentFixture<EventEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EventEditComponent ],
       imports: [IonicModule.forRoot()]

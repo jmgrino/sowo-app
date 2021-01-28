@@ -1,3 +1,4 @@
+import { SharedModule } from './shared/shared.module';
 import { environment } from './../environments/environment';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -15,10 +16,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-
-import { MaterialModule } from './material.module';
-import { AuthService } from './auth/auth.service';
-import { UIService } from './shared/ui.service';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +26,7 @@ import { UIService } from './shared/ui.service';
     IonicModule.forRoot(),
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
+    SharedModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(),
     AngularFireStorageModule,
@@ -38,8 +36,7 @@ import { UIService } from './shared/ui.service';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    AuthService,
-    UIService,
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'},
   ],
   bootstrap: [AppComponent]
 })

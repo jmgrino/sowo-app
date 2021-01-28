@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -13,26 +14,32 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatTableModule} from '@angular/material/table';
 
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+
+
 
 @NgModule({
   imports: [
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatIconModule,
+    MatIconModule,git add .
     MatInputModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
+    MatMomentDateModule,
   ],
   exports: [
     MatBadgeModule,
     MatButtonModule,
     MatCardModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
     MatFormFieldModule,
@@ -42,6 +49,7 @@ import {MatTableModule} from '@angular/material/table';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatTableModule,
+    MatMomentDateModule,
   ]
 })
 export class MaterialModule { }

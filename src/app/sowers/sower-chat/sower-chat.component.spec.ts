@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
 import { SowerChatComponent } from './sower-chat.component';
@@ -7,7 +7,7 @@ describe('SowerChatComponent', () => {
   let component: SowerChatComponent;
   let fixture: ComponentFixture<SowerChatComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ SowerChatComponent ],
       imports: [IonicModule.forRoot()]

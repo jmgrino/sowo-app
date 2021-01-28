@@ -7,7 +7,9 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { UIService } from '../shared/ui.service';
 import { map, switchMap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
   user$ = new BehaviorSubject(null);
 

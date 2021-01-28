@@ -35,7 +35,6 @@ export class BenefitEditComponent implements OnInit {
       address: [''],
       offer: [''],
       note: [''],
-      photoUrl: [''],
     });
 
     if (!this.isAddMode) {

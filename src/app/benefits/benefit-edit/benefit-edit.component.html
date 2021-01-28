@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button text="" defaultHref="/benefits"></ion-back-button>
     </ion-buttons>
-    <ion-title  class="ion-padding-start">{{ isAddMode ? 'Nuevo beneficio' : 'Edit' }}</ion-title>
+    <ion-title  class="ion-padding-start">{{ isAddMode ? 'Nuevo beneficio' : 'Edición' }}</ion-title>
  
   </ion-toolbar>
 </ion-header>
@@ -20,30 +20,22 @@
             <span *ngIf="benefitsForm.controls.company.errors.required">Este campo es obligatorio.</span>
           </mat-error>
         </mat-form-field>
-      </div>
 
-      <div class="field-container">
         <mat-form-field class="form-field" appearance="fill">
           <mat-label>Tipo de negocio</mat-label>
           <input matInput formControlName="companyType">
         </mat-form-field>
-      </div>
 
-      <div class="field-container">
         <mat-form-field class="form-field" appearance="fill">
           <mat-label>Dirección</mat-label>
           <input matInput formControlName="address">
         </mat-form-field>
-      </div>
 
-      <div class="field-container">
         <mat-form-field class="form-field" appearance="fill">
           <mat-label>Oferta</mat-label>
           <input matInput formControlName="offer">
         </mat-form-field>
-      </div>
 
-      <div class="field-container">
         <mat-form-field class="form-field" appearance="fill">
           <mat-label>Nota</mat-label>
           <input matInput formControlName="note">

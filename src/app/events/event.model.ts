@@ -1,7 +1,7 @@
 export interface calEvent {
 	id?: string;
 	name: string;
-	date: Date;
+	eventDate: Date;
 	hours: string;
 	prize: string;
 	book: boolean;

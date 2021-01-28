@@ -43,15 +43,15 @@ export class EventsPage implements OnInit {
       this.calEvents$ = of([
         {
           name: 'DESAYUNO',
-          date: new Date(2021,2,8),
+          eventDate: new Date(2021,2,8),
           hours: 'De 8:30 a 9:30',
-          prize: '15€ (12€ coworkers',
+          prize: '15€ (12€ coworkers)',
           book: false,
           photoUrl: null,
         },
         {
           name: 'YOGA',
-          date: new Date(2021,2,8),
+          eventDate: new Date(2021,2,8),
           hours: 'De 8:30 a 9:30',
           prize: 'Gratis',
           book: true,
@@ -74,8 +74,7 @@ export class EventsPage implements OnInit {
   }
 
   onEditItem(calEvent) {
-    this.router.navigateByUrl(`/events/edit/${calEvent.id}`);
-    
+        this.router.navigateByUrl(`/events/edit/${calEvent.id}`);
   }
 
   onBookItem(calEvent) {
