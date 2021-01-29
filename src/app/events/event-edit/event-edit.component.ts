@@ -31,14 +31,13 @@ export class EventEditComponent implements OnInit {
     this.id = this.route.snapshot.params['id'];
     
     this.isAddMode = !this.id;
-    console.log(this.isAddMode);
 
     this.eventsForm = this.fb.group({
       name: [''],
       eventDate: [''],
       hours: [''],
       prize: [''],
-      book: [''],
+      book: [false],
     });
 
     if (!this.isAddMode) {
@@ -78,32 +77,37 @@ export class EventEditComponent implements OnInit {
   private addEvent() {
     console.log(this.eventsForm.value);
     console.log(this.eventsForm.value['eventDate'].toDate());
-    const {name, eventDate} = this.eventsForm.value;
-    
+    const {name, eventDate, hours, prize, book} = this.eventsForm.value;
     
     const newEvent = {
       name,
       eventDate: eventDate.toDate(),
+      hours,
+      prize,
+      book
     }
-    console.log('newEvent', newEvent);
-    https://www.npmjs.com/package/ngx-material-timepicker
+    // console.log('newEvent', newEvent);
+
+
+    // Time Picker
+    // https://www.npmjs.com/package/ngx-material-timepicker
     
     
-    
-    // this.eventsService.addBenefit(this.eventsForm.value).subscribe( 
-    //   () => {
-    //     this.router.navigateByUrl('/benefits');
-    //   },  error => {
-    //     const message = this.uiService.translateFirestoreError(error);
-    //     this.uiService.showStdSnackbar(message);
-    //   }
-    // )
+    this.eventsService.addEvent(newEvent).subscribe( 
+      () => {
+        this.router.navigateByUrl('/events');
+      },  error => {
+        const message = this.uiService.translateFirestoreError(error);
+        this.uiService.showStdSnackbar(message);
+      }
+    )
+
   }
 
   private updateEvent() {
-    // this.eventsService.saveBenefit(this.id, this.eventsForm.value).subscribe( 
+    // this.eventsService.saveEvent(this.id, this.eventsForm.value).subscribe( 
     //   () => {
-    //     this.router.navigateByUrl('/benefits');
+    //     this.router.navigateByUrl('/events');
     //   },  error => {
     //     const message = this.uiService.translateFirestoreError(error);
     //     this.uiService.showStdSnackbar(message);

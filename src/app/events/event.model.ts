@@ -3,7 +3,7 @@ export interface calEvent {
 	name: string;
 	eventDate: Date;
 	hours: string;
-	prize: string;
+	prize: number;
 	book: boolean;
 	photoUrl?: string;
 }

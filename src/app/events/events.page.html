@@ -46,9 +46,9 @@
           </div>
           <div class="text-container">
             <ion-label class="name-label">{{ calEvent.name }}</ion-label>
-            <ion-label class="date-label">{{ displayDate(calEvent.date) }}</ion-label>
+            <ion-label class="date-label">{{ displayTimestamp(calEvent.eventDate) }}</ion-label>
             <ion-label class="hours-label">{{ calEvent.hours }}</ion-label>
-            <ion-label class="prize-label">{{ calEvent.prize }}</ion-label>
+            <ion-label class="prize-label">Precio: {{ calEvent.prize == 0 ? 'Gratis' : calEvent.prize + '€' }}</ion-label>
 
             <ion-label *ngIf="!calEvent.book" class="book-label">No hace falta reservar</ion-label>
             <ion-button *ngIf="calEvent.book" color="success" size="small" (click)="onBookItem(calEvent)">RESERVAR</ion-button>

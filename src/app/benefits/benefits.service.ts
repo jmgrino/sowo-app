@@ -1,5 +1,5 @@
 import { Benefit } from './benefit.model';
-import { AuthService } from './../auth/auth.service';
+// import { AuthService } from './../auth/auth.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { map, switchMap } from 'rxjs/operators';
@@ -12,7 +12,7 @@ export class BenefitsService {
 
   constructor(
     private afs: AngularFirestore,
-    private authService: AuthService
+    // private authService: AuthService
   ) { }
 
   fetchBenefits() {
@@ -32,7 +32,7 @@ export class BenefitsService {
           })
         )
       })
-    ) 
+    ); 
   }
 
   addBenefit(benefit: Benefit) {

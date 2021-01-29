@@ -39,25 +39,26 @@ export class EventsPage implements OnInit {
   ngOnInit() {
     this.authService.getCurrentUser().subscribe( user => {
       this.user = user;
-      // this.calEvents$ = this.eventsService.fetchEvents();
-      this.calEvents$ = of([
-        {
-          name: 'DESAYUNO',
-          eventDate: new Date(2021,2,8),
-          hours: 'De 8:30 a 9:30',
-          prize: '15€ (12€ coworkers)',
-          book: false,
-          photoUrl: null,
-        },
-        {
-          name: 'YOGA',
-          eventDate: new Date(2021,2,8),
-          hours: 'De 8:30 a 9:30',
-          prize: 'Gratis',
-          book: true,
-          photoUrl: null,
-        },
-      ]) 
+      this.calEvents$ = this.eventsService.fetchEvents();
+
+      // this.calEvents$ = of([
+      //   {
+      //     name: 'DESAYUNO',
+      //     eventDate: new Date(2021,2,8),
+      //     hours: 'De 8:30 a 9:30',
+      //     prize: '15€ (12€ coworkers)',
+      //     book: false,
+      //     photoUrl: null,
+      //   },
+      //   {
+      //     name: 'YOGA',
+      //     eventDate: new Date(2021,2,8),
+      //     hours: 'De 8:30 a 9:30',
+      //     prize: 'Gratis',
+      //     book: true,
+      //     photoUrl: null,
+      //   },
+      // ]) 
     });
   }
 
@@ -144,8 +145,28 @@ export class EventsPage implements OnInit {
     // }
   }
 
-  displayDate(date: Date) {
-    const dateOptions = {
+  // displayDate(date: Date) {
+  //   const dateOptions = {
+  //     weekday: 'long',
+  //     day: '2-digit',
+  //     month: 'long',
+  //     // month: '2-digit',
+  //     year: 'numeric',
+  //     // year: '2-digit',
+  //     // hour: '2-digit',
+  //     // minute: '2-digit',
+  //     // second: '2-digit',
+  //   }
+
+  //   if (date) {
+  //     return date.toLocaleString('es-ES', dateOptions);
+  //   } else {
+  //     return '';
+  //   } 
+  // }
+
+  displayTimestamp(timestamp: firebase.firestore.Timestamp) {
+    const timestampOptions = {
       weekday: 'long',
       day: '2-digit',
       month: 'long',
@@ -157,8 +178,8 @@ export class EventsPage implements OnInit {
       // second: '2-digit',
     }
 
-    if (date) {
-      return date.toLocaleString('es-ES', dateOptions);
+    if (timestamp) {
+      return timestamp.toDate().toLocaleString('es-ES', timestampOptions);
     } else {
       return '';
     } 
