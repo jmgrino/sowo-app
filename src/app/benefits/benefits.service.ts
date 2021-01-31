@@ -52,13 +52,7 @@ export class BenefitsService {
   saveBenefit(id: string, changes: Partial<Benefit>) {
     return from(this.afs.doc(`benefits/${id}`).update(changes));
   }
-
-  // savePhotoUrl(id: string, changes: Partial<Benefit>) {
-  //   return from(this.afs.doc(`benefits/${id}`).update(changes));
-  // }
-
   
-
   deleteBenefit(id: string){
     return from(this.afs.doc(`benefits/${id}`).delete())
   }

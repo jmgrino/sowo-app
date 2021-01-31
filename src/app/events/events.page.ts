@@ -3,16 +3,18 @@ import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 import { from, interval, Observable, of } from 'rxjs';
-import {delay, map, switchMap, take} from "rxjs/operators";
+import {concatMap, delay, last, map, switchMap, take} from "rxjs/operators";
 import { AuthService } from '../auth/auth.service';
 import { User } from '../auth/user.model';
 import { StorageService } from '../shared/storage.service';
 import { UIService } from '../shared/ui.service';
-import { calEvent } from './event.model';
+import { CalEvent } from './event.model';
 import { EventsService } from './events.service';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+
+const IMAGENAME = 'event-image';
 
 @Component({
   selector: 'app-events',
@@ -21,7 +23,7 @@ import 'firebase/firestore';
 })
 export class EventsPage implements OnInit {
   user: User;
-  calEvents$: Observable<calEvent[]>;
+  calEvents$: Observable<CalEvent[]>;
   editing = false;
   uploadPercent$: Observable<number>;
   defaultValue = '../../../assets/img/unknoun_event.png';
@@ -79,70 +81,70 @@ export class EventsPage implements OnInit {
   }
 
   onBookItem(calEvent) {
-
+    const message = 'Reservas todavia no implementadas';
+    this.uiService.showStdSnackbar(message);
   }
 
-  async onRemoveItem(benefit) {
-    // const alert = await this.alertController.create({
-    //   cssClass: 'alert-class',
-    //   header: 'Confirmar',
-    //   message: 'Borrar ' + benefit.company + '?',
-    //   buttons: [
-    //     {
-    //       text: 'No',
-    //       role: 'cancel',
-    //       cssClass: 'buttonsAlertLeft',
-    //     }, {
-    //       text: 'Si',
-    //       cssClass: 'buttonsAlertRight',
-    //       handler: () => {
-    //         this.benefitsService.deleteBenefit(benefit.id).subscribe( 
-    //           () => {
-    //             this.storageService.deleteFolderContents(`benefits/${benefit.id}`);
-    //           },  error => {
-    //             const message = this.uiService.translateFirestoreError(error);
-    //             this.uiService.showStdSnackbar(message);
-    //           }
-    //         )
+  async onRemoveItem(calEvent) {
+    const alert = await this.alertController.create({
+      cssClass: 'alert-class',
+      header: 'Confirmar',
+      message: 'Borrar ' + calEvent.name + '?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'buttonsAlertLeft',
+        }, {
+          text: 'Si',
+          cssClass: 'buttonsAlertRight',
+          handler: () => {
+            this.eventsService.deleteEvent(calEvent.id).subscribe( 
+              () => {
+                this.storageService.deleteFolderContents(`events/${calEvent.id}`);
+              },  error => {
+                const message = this.uiService.translateFirestoreError(error);
+                this.uiService.showStdSnackbar(message);
+              }
+            )
 
+          }
+        }
+      ]
+    });
 
-    //       }
-    //     }
-    //   ]
-    // });
-
-    // await alert.present();   
+    await alert.present();   
     
   }
 
-  onUploadPhoto(event, benefit) {
-    // const file: File = event.target.files[0];
-    // const fileExt = file.name.split('.').pop();
-    // const fileName = IMAGENAME + '.' + fileExt;
-    // const filePath = `benefits/${benefit.id}/${fileName}`;
+  onUploadPhoto(event, calEvent) {
+    const file: File = event.target.files[0];
+    const fileExt = file.name.split('.').pop();
+    const fileName = IMAGENAME + '.' + fileExt;
+    const filePath = `events/${calEvent.id}/${fileName}`;
 
-    // if (file.type.split('/')[0] !== 'image') {
-    //   return alert('only image files');
-    // } else if (file.size >= (2 * 1024 * 1024) ) {
-    //   this.uiService.showStdSnackbar('Imagen demasiado grande. Debe ser menor de 2 MBytes');
-    // } else {
-    //   const task = this.storageService.uploadFile(filePath, file);
-    //   this.uploadPercent$ = task.percentageChanges();
+    if (file.type.split('/')[0] !== 'image') {
+      return alert('only image files');
+    } else if (file.size >= (2 * 1024 * 1024) ) {
+      this.uiService.showStdSnackbar('Imagen demasiado grande. Debe ser menor de 2 MBytes');
+    } else {
+      const task = this.storageService.uploadFile(filePath, file);
+      this.uploadPercent$ = task.percentageChanges();
 
-    //   task.snapshotChanges().pipe(
-    //     last(),
-    //     concatMap( () => this.storageService.getDownloadURL(filePath) )
-    //   ).subscribe(  url => {
-    //      this.benefitsService.saveBenefit(benefit.id, {photoUrl: url}).subscribe( () => {},
-    //      error => {
-    //       const message = this.uiService.translateStorageError(error);
-    //       this.uiService.showStdSnackbar(message);
-    //     });
-    //   }, error => {
-    //     const message = this.uiService.translateStorageError(error);
-    //     this.uiService.showStdSnackbar(message);
-    //   });
-    // }
+      task.snapshotChanges().pipe(
+        last(),
+        concatMap( () => this.storageService.getDownloadURL(filePath) )
+      ).subscribe(  url => {
+         this.eventsService.saveEvent(calEvent.id, {photoUrl: url}).subscribe( () => {},
+         error => {
+          const message = this.uiService.translateStorageError(error);
+          this.uiService.showStdSnackbar(message);
+        });
+      }, error => {
+        const message = this.uiService.translateStorageError(error);
+        this.uiService.showStdSnackbar(message);
+      });
+    }
   }
 
   // displayDate(date: Date) {

@@ -1,4 +1,4 @@
-import { calEvent } from './../event.model';
+import { CalEvent } from './../event.model';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,6 +7,7 @@ import { EventsService } from '../events.service';
 import { first } from 'rxjs/operators';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+// import { Timestamp } from '@google-cloud/firestore';
 
 @Component({
   selector: 'app-event-edit',
@@ -17,7 +18,7 @@ export class EventEditComponent implements OnInit {
   isAddMode: boolean;
   id: string;
   eventsForm: FormGroup;
-  calEvent: calEvent;
+  calEvent: CalEvent;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -41,17 +42,19 @@ export class EventEditComponent implements OnInit {
     });
 
     if (!this.isAddMode) {
-      // this.eventsService.fetchEvent(this.id).pipe(
-      //   first(),
-      // )
-      // .subscribe( item => {
-      //   this.eventsForm.patchValue(item);
-      // });
+      this.eventsService.fetchEvent(this.id).pipe(
+        first(),
+      )
+      .subscribe( item => {
+        this.eventsForm.patchValue(item);
+      });
     }
 
   }
 
   onDateChange(event) {
+    // console.log('onDataChange', event);
+    
     // var convertDate = new Date(event.target.value).toISOString().substring(0, 10);
     // this.eventsForm.get('date').setValue(convertDate, {
     //   onlyself: true
@@ -75,25 +78,21 @@ export class EventEditComponent implements OnInit {
   }
 
   private addEvent() {
-    console.log(this.eventsForm.value);
-    console.log(this.eventsForm.value['eventDate'].toDate());
     const {name, eventDate, hours, prize, book} = this.eventsForm.value;
     
-    const newEvent = {
+    const newEvent: CalEvent = {
       name,
       eventDate: eventDate.toDate(),
       hours,
       prize,
       book
     }
-    // console.log('newEvent', newEvent);
-
 
     // Time Picker
     // https://www.npmjs.com/package/ngx-material-timepicker
     
-    
-    this.eventsService.addEvent(newEvent).subscribe( 
+    this.eventsService.addEvent(newEvent)
+    .subscribe( 
       () => {
         this.router.navigateByUrl('/events');
       },  error => {
@@ -105,14 +104,24 @@ export class EventEditComponent implements OnInit {
   }
 
   private updateEvent() {
-    // this.eventsService.saveEvent(this.id, this.eventsForm.value).subscribe( 
-    //   () => {
-    //     this.router.navigateByUrl('/events');
-    //   },  error => {
-    //     const message = this.uiService.translateFirestoreError(error);
-    //     this.uiService.showStdSnackbar(message);
-    //   }
-    // )
+    const {name, eventDate, hours, prize, book} = this.eventsForm.value;
+    
+    const newEvent: CalEvent = {
+      name,
+      eventDate: eventDate.toDate(),
+      hours,
+      prize,
+      book
+    }
+
+    this.eventsService.saveEvent(this.id, newEvent).subscribe( 
+      () => {
+        this.router.navigateByUrl('/events');
+      },  error => {
+        const message = this.uiService.translateFirestoreError(error);
+        this.uiService.showStdSnackbar(message);
+      }
+    )
   }
 
 }
