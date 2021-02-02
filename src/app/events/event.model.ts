@@ -13,4 +13,5 @@ export interface CalEvent {
 export interface Booking {
 	eventId: string;
 	userId: string;
+	userName?: string;
 }

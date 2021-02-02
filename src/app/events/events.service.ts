@@ -43,31 +43,17 @@ export class EventsService {
         const bookings = res[1];
 
         for (const calEvent of calEvents) {
-          console.log(calEvent.name);
-          console.log(calEvent);
-          
-
           calEvent.booked = false;
           calEvent.attendants = 0;
           for (const booking of bookings) {
-            console.log('-------- Booking ------------');
-            
-            console.log(booking);
-            
-            
-            
             if (calEvent.id === booking.eventId) {
               calEvent.attendants++;
-              console.log('Attendant++', calEvent.attendants);
               if (uid === booking.userId) {
                 calEvent.booked = true; 
-                console.log('Booked');
-                
               }
             }
           }
         }
-
         return calEvents;
       })
     );    
@@ -97,7 +83,7 @@ export class EventsService {
     return from(this.afs.doc(`events/${id}`).delete())
   }
 
-  addBooking(eventId, userId) {
+  addBooking(eventId, userId, userName) {
     return this.afs.collection<Booking>('bookings', ref => ref.where('eventId', '==', eventId).where('userId', '==', userId)).get()
     .pipe(
       map( snaps => {
@@ -109,7 +95,8 @@ export class EventsService {
         if (res.length == 0) {
           return from(this.afs.collection<Booking>('bookings').add({
               eventId,
-              userId
+              userId,
+              userName
             }));
         } else {
           return throwError(new Error('Ya existe una reserva con estos datos'));
@@ -123,6 +110,16 @@ export class EventsService {
       map( querySnapshot => {
         return querySnapshot.docs[0].ref.delete();
       })
+    );
+  }
+
+  fetchEventAttendees(eventId) {
+    return this.afs.collection<Booking>('bookings', ref => ref.where('eventId', '==', eventId)).get().pipe(
+      map( snaps => {
+        return snaps.docs.map( snap => {
+          return snap.data() as Booking;
+        });
+      })      
     );
   }
 

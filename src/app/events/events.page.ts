@@ -85,7 +85,8 @@ export class EventsPage implements OnInit {
   onBookItem(calEvent) {
     // const message = 'Reservas todavia no implementadas';
     // this.uiService.showStdSnackbar(message);
-    this.eventsService.addBooking(calEvent.id, this.user.uid)
+    const userName = this.user.displayName ? this.user.displayName : this.user.email;
+    this.eventsService.addBooking(calEvent.id, this.user.uid, userName)
     .subscribe( 
       () => {
         const message = "Reserva realizada";
@@ -143,8 +144,8 @@ export class EventsPage implements OnInit {
     
   }
 
-  onAttendants() {
-    
+  onAttendees(calEvent: CalEvent) {
+    this.router.navigateByUrl(`/events/attendees/${calEvent.id}`);
   }
 
   onUploadPhoto(event, calEvent) {

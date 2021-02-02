@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedGuard } from './../shared/shared.guard';
 import { EventsPage } from './events.page';
 import { EventEditComponent } from './event-edit/event-edit.component';
+import { AttendeesComponent } from './attendees/attendees.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,11 @@ const routes: Routes = [
   {
     path: 'edit/:id',
     component: EventEditComponent,
+    canActivate: [SharedGuard]
+  },
+  {
+    path: 'attendees/:id',
+    component: AttendeesComponent,
     canActivate: [SharedGuard]
   },
 

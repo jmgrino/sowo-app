@@ -5,6 +5,7 @@ import { SharedModule } from '../shared/shared.module';
 import { EventsPageRoutingModule } from './events-routing.module';
 import { EventsPage } from './events.page';
 import { EventEditComponent } from './event-edit/event-edit.component';
+import { AttendeesComponent } from './attendees/attendees.component';
 
 @NgModule({
   imports: [
@@ -14,6 +15,6 @@ import { EventEditComponent } from './event-edit/event-edit.component';
     IonicModule,
     EventsPageRoutingModule
   ],
-  declarations: [EventsPage, EventEditComponent]
+  declarations: [EventsPage, EventEditComponent, AttendeesComponent]
 })
 export class EventsPageModule {}
