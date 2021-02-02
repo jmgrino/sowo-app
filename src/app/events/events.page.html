@@ -51,7 +51,10 @@
             <ion-label class="prize-label">Precio: {{ calEvent.prize == 0 ? 'Gratis' : calEvent.prize + '€' }}</ion-label>
 
             <ion-label *ngIf="!calEvent.book" class="book-label">No hace falta reservar</ion-label>
-            <ion-button *ngIf="calEvent.book" color="success" size="small" (click)="onBookItem(calEvent)">RESERVAR</ion-button>
+            <ion-button *ngIf="calEvent.book && !calEvent.booked" color="secondary" size="small" (click)="onBookItem(calEvent)">RESERVAR</ion-button>
+            <ion-button *ngIf="calEvent.book && !calEvent.booked" color="secondary" size="small" (click)="onAttendants(calEvent)">{{ calEvent.attendants }}</ion-button>
+            <ion-button *ngIf="calEvent.book && calEvent.booked" color="success" size="small" (click)="onUnbookItem(calEvent)">RESERVADO</ion-button>
+            <ion-button *ngIf="calEvent.book && calEvent.booked" color="success" size="small" (click)="onAttendants(calEvent)">{{ calEvent.attendants }}</ion-button>
             <!-- <button mat-raised-button *ngIf="calEvent.book" color="primary" class="book-button" (click)="onBookItem(calEvent)">RESERVAR</button> -->
 
             <!-- <ion-note class="note-label">{{ calEvent.note }}</ion-note> -->

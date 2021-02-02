@@ -6,4 +6,11 @@ export interface CalEvent {
 	prize: number;
 	book: boolean;
 	photoUrl?: string;
+	booked?: boolean;
+	attendants?: number;
+}
+
+export interface Booking {
+	eventId: string;
+	userId: string;
 }

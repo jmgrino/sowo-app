@@ -1,9 +1,8 @@
-import { EventEditComponent } from './event-edit/event-edit.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { CalEvent } from './event.model';
-import { from } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Booking, CalEvent } from './event.model';
+import { throwError, combineLatest, from } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -18,8 +17,8 @@ export class EventsService {
     private afs: AngularFirestore
   ) { }
 
-  fetchEvents() {
-    return this.afs.collection<CalEvent>('events').snapshotChanges().pipe(
+  fetchEvents(uid) {
+    const colEvents$ = this.afs.collection<CalEvent>('events').snapshotChanges().pipe(
       map( snaps => {
         return snaps.map( snap => {
           return { id: snap.payload.doc.id, ...snap.payload.doc.data() }
@@ -34,6 +33,42 @@ export class EventsService {
             })
           })
         )
+      })
+    );
+    // const bookings$ = this.afs.collection<Booking>('bookings', ref => ref.where('userId', '==', uid)).valueChanges();
+    const bookings$ = this.afs.collection<Booking>('bookings').valueChanges();
+    return combineLatest([colEvents$, bookings$]).pipe(
+      map( res => {
+        const calEvents = res[0];
+        const bookings = res[1];
+
+        for (const calEvent of calEvents) {
+          console.log(calEvent.name);
+          console.log(calEvent);
+          
+
+          calEvent.booked = false;
+          calEvent.attendants = 0;
+          for (const booking of bookings) {
+            console.log('-------- Booking ------------');
+            
+            console.log(booking);
+            
+            
+            
+            if (calEvent.id === booking.eventId) {
+              calEvent.attendants++;
+              console.log('Attendant++', calEvent.attendants);
+              if (uid === booking.userId) {
+                calEvent.booked = true; 
+                console.log('Booked');
+                
+              }
+            }
+          }
+        }
+
+        return calEvents;
       })
     );    
   }
@@ -62,5 +97,33 @@ export class EventsService {
     return from(this.afs.doc(`events/${id}`).delete())
   }
 
+  addBooking(eventId, userId) {
+    return this.afs.collection<Booking>('bookings', ref => ref.where('eventId', '==', eventId).where('userId', '==', userId)).get()
+    .pipe(
+      map( snaps => {
+        return snaps.docs.map( snap => {
+          return snap.data();
+        });
+      }),
+      switchMap( res => {
+        if (res.length == 0) {
+          return from(this.afs.collection<Booking>('bookings').add({
+              eventId,
+              userId
+            }));
+        } else {
+          return throwError(new Error('Ya existe una reserva con estos datos'));
+        }
+      })
+    )
+  }
+
+  deleteBooking(eventId, userId) {
+    return this.afs.collection<Booking>('bookings', ref => ref.where('eventId', '==', eventId).where('userId', '==', userId)).get().pipe(
+      map( querySnapshot => {
+        return querySnapshot.docs[0].ref.delete();
+      })
+    );
+  }
 
 }

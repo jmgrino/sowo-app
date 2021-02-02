@@ -41,7 +41,9 @@ export class EventsPage implements OnInit {
   ngOnInit() {
     this.authService.getCurrentUser().subscribe( user => {
       this.user = user;
-      this.calEvents$ = this.eventsService.fetchEvents();
+      this.calEvents$ = this.eventsService.fetchEvents(user.uid);
+
+
 
       // this.calEvents$ = of([
       //   {
@@ -81,8 +83,32 @@ export class EventsPage implements OnInit {
   }
 
   onBookItem(calEvent) {
-    const message = 'Reservas todavia no implementadas';
-    this.uiService.showStdSnackbar(message);
+    // const message = 'Reservas todavia no implementadas';
+    // this.uiService.showStdSnackbar(message);
+    this.eventsService.addBooking(calEvent.id, this.user.uid)
+    .subscribe( 
+      () => {
+        const message = "Reserva realizada";
+        this.uiService.showStdSnackbar(message);
+      },  error => {
+        const message = this.uiService.translateFirestoreError(error);
+        this.uiService.showStdSnackbar(message);
+      }
+    )
+    
+  }
+
+  onUnbookItem(calEvent) {
+    this.eventsService.deleteBooking(calEvent.id, this.user.uid)
+    .subscribe( 
+      () => {
+        const message = "Reserva anulada";
+        this.uiService.showStdSnackbar(message);
+      },  error => {
+        const message = this.uiService.translateFirestoreError(error);
+        this.uiService.showStdSnackbar(message);
+      }
+    )
   }
 
   async onRemoveItem(calEvent) {
@@ -114,6 +140,10 @@ export class EventsPage implements OnInit {
     });
 
     await alert.present();   
+    
+  }
+
+  onAttendants() {
     
   }
 
